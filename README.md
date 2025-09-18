@@ -34,7 +34,6 @@ A solução proposta combina **visão computacional** e **aprendizado de máquin
 - [Python](https://www.python.org/)  
 - [OpenCV](https://opencv.org/)  
 - [TensorFlow](https://www.tensorflow.org/) ou [PyTorch](https://pytorch.org/)  
-- [CUDA](https://developer.nvidia.com/cuda-zone) (para aceleração em GPU)  
 
 ---
 
