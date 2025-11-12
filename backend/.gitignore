@@ -1,0 +1,59 @@
+# Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Ambientes virtuais
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Configurações de IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+logs/
+nohup.out
+
+# Arquivos temporários
+*.tmp
+*.temp
+*.bak
+*.orig
+
+# Compilações Cython
+build/
+dist/
+*.egg-info/
+*.so
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+
+# Dependências locais
+pip-wheel-metadata/
+__pypackages__/
+
+# Arquivos de cache
+.cache/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Banco de dados / dumps locais
+*.sqlite3
+*.db
+*.sql
+
+# Arquivos do OpenCV / MediaPipe temporários
+frames/
+output/
+captures/
