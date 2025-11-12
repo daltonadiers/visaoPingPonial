@@ -1,0 +1,32 @@
+.scoreboard {
+  background: #161b22;
+  border-radius: 16px;
+  padding: 1.5rem;
+  min-width: 250px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  transition: transform 0.2s;
+}
+
+.scoreboard:hover {
+  transform: translateY(-4px);
+}
+
+.player-name {
+  width: 100%;
+  font-size: 1.2rem;
+  text-align: center;
+  border: none;
+  border-bottom: 2px solid #30363d;
+  background: transparent;
+  color: #fff;
+  margin-bottom: 1rem;
+  outline: none;
+}
+
+.score {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #58a6ff;
+  margin: 0.5rem 0;
+}

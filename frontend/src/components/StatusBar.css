@@ -1,0 +1,23 @@
+.status-bar {
+  width: 100%;
+  text-align: center;
+  margin-top: 1rem;
+  padding: 1rem 0;
+  background-color: #0b0f0c;
+  border-top: 2px solid #00ff66;
+}
+
+.status-bar p {
+  color: #00ff66;
+  font-family: "Courier New", monospace;
+  font-size: 1.3rem;
+  font-weight: bold;
+  margin: 0;
+  text-shadow: 0 0 5px #00ff66;
+}
+
+@media (max-width: 600px) {
+  .status-bar p {
+    font-size: 1rem;
+  }
+}
