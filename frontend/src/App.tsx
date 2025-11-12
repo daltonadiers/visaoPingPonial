@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Scoreboard from "./components/Scoreboard";
 import VideoFeed from "./components/VideoFeed";
 import StatusBar from "./components/StatusBar";
 import "./App.css";
+
+const API_URL = "http://localhost:8000";
 
 export default function App() {
   const [playerA, setPlayerA] = useState("Jogador A");
@@ -11,12 +13,34 @@ export default function App() {
   const [scoreB, setScoreB] = useState(0);
   const [statusMsg, setStatusMsg] = useState("Em andamento");
 
+  // polling a cada 200ms para o estado do backend
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetch(`${API_URL}/state`)
+        .then((res) => res.json())
+        .then((data) => {
+          setPlayerA(data.playerA);
+          setPlayerB(data.playerB);
+          setScoreA(data.scoreA);
+          setScoreB(data.scoreB);
+          setStatusMsg(data.message);
+        })
+        .catch(() => {
+          setStatusMsg("Falha ao conectar com o servidor");
+        });
+    }, 50);
+
+    return () => clearInterval(interval);
+  }, []);
+
   const handleReset = () => {
-    setPlayerA("Jogador A");
-    setPlayerB("Jogador B");
-    setScoreA(0);
-    setScoreB(0);
-    setStatusMsg("Em andamento");
+    fetch(`${API_URL}/reset`, { method: "POST" })
+      .then(() => {
+        setStatusMsg("Partida reiniciada");
+        setScoreA(0);
+        setScoreB(0);
+      })
+      .catch(() => setStatusMsg("Erro ao resetar"));
   };
 
   return (
@@ -24,12 +48,11 @@ export default function App() {
       <h1 className="title">PingPong Vision</h1>
 
       <div className="score-container">
-        <Scoreboard player={playerA} score={scoreA} setPlayer={setPlayerA} />
-        <Scoreboard player={playerB} score={scoreB} setPlayer={setPlayerB} />
+        <Scoreboard player={playerA} score={scoreA} />
+        <Scoreboard player={playerB} score={scoreB} />
       </div>
 
-      <VideoFeed />
-
+      <VideoFeed streamUrl={`${API_URL}/video_feed`} />
       <StatusBar message={statusMsg} />
 
       <button className="reset-btn" onClick={handleReset}>
