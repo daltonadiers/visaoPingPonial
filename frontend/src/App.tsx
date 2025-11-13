@@ -14,6 +14,8 @@ export default function App() {
   const [scoreB, setScoreB] = useState(0);
   const [statusMsg, setStatusMsg] = useState("Em andamento");
   const hasWinnerRef = useRef(false);
+  // armazena o timeout para resetar após vitória
+  const resetTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -31,6 +33,11 @@ export default function App() {
               const winnerName = data.scoreA >= 7 ? data.playerA : data.playerB;
               setStatusMsg(`${winnerName} venceu!`);
               confetti({ particleCount: 200, spread: 90, origin: { y: 0.6 } });
+
+              // agenda reset após 5 segundos
+              resetTimeoutRef.current = window.setTimeout(() => {
+                handleReset();
+              }, 5000);
             } else {
               setStatusMsg(data.message);
             }
@@ -43,10 +50,22 @@ export default function App() {
         });
     }, 50);
 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      // limpa timeout pendente ao desmontar
+      if (resetTimeoutRef.current) {
+        clearTimeout(resetTimeoutRef.current);
+        resetTimeoutRef.current = null;
+      }
+    };
   }, []);
 
   const handleReset = () => {
+    if (resetTimeoutRef.current) {
+      clearTimeout(resetTimeoutRef.current);
+      resetTimeoutRef.current = null;
+    }
+
     fetch(`${API_URL}/reset`, { method: "POST" })
       .then(() => {
         hasWinnerRef.current = false;
