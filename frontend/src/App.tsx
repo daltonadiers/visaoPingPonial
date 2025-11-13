@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Scoreboard from "./components/Scoreboard";
 import VideoFeed from "./components/VideoFeed";
 import StatusBar from "./components/StatusBar";
 import "./App.css";
+import confetti from "canvas-confetti";
 
 const API_URL = "http://localhost:8000";
 
@@ -12,8 +13,8 @@ export default function App() {
   const [scoreA, setScoreA] = useState(0);
   const [scoreB, setScoreB] = useState(0);
   const [statusMsg, setStatusMsg] = useState("Em andamento");
+  const hasWinnerRef = useRef(false);
 
-  // polling a cada 200ms para o estado do backend
   useEffect(() => {
     const interval = setInterval(() => {
       fetch(`${API_URL}/state`)
@@ -23,10 +24,22 @@ export default function App() {
           setPlayerB(data.playerB);
           setScoreA(data.scoreA);
           setScoreB(data.scoreB);
-          setStatusMsg(data.message);
+
+          if (!hasWinnerRef.current) {
+            if (data.scoreA >= 7 || data.scoreB >= 7) {
+              hasWinnerRef.current = true;
+              const winnerName = data.scoreA >= 7 ? data.playerA : data.playerB;
+              setStatusMsg(`${winnerName} venceu!`);
+              confetti({ particleCount: 200, spread: 90, origin: { y: 0.6 } });
+            } else {
+              setStatusMsg(data.message);
+            }
+          }
         })
         .catch(() => {
-          setStatusMsg("Falha ao conectar com o servidor");
+          if (!hasWinnerRef.current) {
+            setStatusMsg("Falha ao conectar com o servidor");
+          }
         });
     }, 50);
 
@@ -36,6 +49,7 @@ export default function App() {
   const handleReset = () => {
     fetch(`${API_URL}/reset`, { method: "POST" })
       .then(() => {
+        hasWinnerRef.current = false;
         setStatusMsg("Partida reiniciada");
         setScoreA(0);
         setScoreB(0);
